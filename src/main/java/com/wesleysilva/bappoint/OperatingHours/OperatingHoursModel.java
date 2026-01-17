@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "operating_hours")
@@ -18,7 +19,7 @@ public class OperatingHoursModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long id;
+    private UUID id;
 
     @OneToOne
     @JoinColumn(name = "settings_id")

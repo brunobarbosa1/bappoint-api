@@ -22,7 +22,7 @@ public class CompanyModel {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column
