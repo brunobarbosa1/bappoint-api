@@ -1,57 +1,57 @@
 package com.wesleysilva.bappoint.Settings;
 
-import org.springframework.stereotype.Component;
+import com.wesleysilva.bappoint.Company.CompanyModel;
+import com.wesleysilva.bappoint.Company.CompanyRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-@Component
+@Service
+@Transactional
 public class SettingsService {
-    private final SettingsRepository settingsRepository;
+
+    private final CompanyRepository companyRepository;
     private final SettingsMapper settingsMapper;
 
-    public SettingsService(SettingsMapper serviceMapper, SettingsRepository settingsRepository) {
-        this.settingsMapper = serviceMapper;
-        this.settingsRepository = settingsRepository;
+    public SettingsService(
+            CompanyRepository companyRepository,
+            SettingsMapper settingsMapper
+    ) {
+        this.companyRepository = companyRepository;
+        this.settingsMapper = settingsMapper;
     }
 
-    public SettingsDTO createSettings(SettingsDTO settingsDTO) {
-        SettingsModel settingsModel = settingsMapper.map(settingsDTO);
-        settingsModel = settingsRepository.save(settingsModel);
+    public SettingsDTO getByCompanyId(UUID companyId) {
+        CompanyModel company = companyRepository
+                .findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
 
-        return settingsMapper.map(settingsModel);
-    }
+        SettingsModel settings = company.getSettings();
 
-    public List<SettingsDTO> listSettings() {
-        List<SettingsModel> settingsModels = settingsRepository.findAll();
-        return settingsModels.stream()
-                .map(settingsMapper::map)
-                .collect(Collectors.toList());
-    }
-
-    public SettingsDTO listSettingsById(UUID id) {
-        SettingsModel settingsModel = settingsRepository.findById(id).orElse(null);
-        assert settingsModel != null;
-        return settingsMapper.map(settingsModel);
-    }
-
-    void deleteSettingsById(UUID id) {
-        settingsRepository.deleteById(id);
-    }
-
-    public SettingsDTO updateSettings(UUID id, SettingsDTO settingsDTO) {
-        Optional<SettingsModel> settingsModel = settingsRepository.findById(id);
-        if (settingsModel.isPresent()) {
-            SettingsModel settingsUpdated = settingsMapper.map(settingsDTO);
-            settingsUpdated.setId(id);
-            SettingsModel settingsModelUpdated = settingsRepository.save(settingsUpdated);
-            return settingsMapper.map(settingsModelUpdated);
-        } else  {
-            return null;
+        if (settings == null) {
+            throw new EntityNotFoundException("Settings not found for company");
         }
 
+        return settingsMapper.map(settings);
     }
 
+    public SettingsDTO updateByCompanyId(UUID companyId, SettingsDTO dto) {
+        CompanyModel company = companyRepository
+                .findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+
+        SettingsModel settings = company.getSettings();
+
+        if (settings == null) {
+            throw new EntityNotFoundException("Settings not found for company");
+        }
+
+        settings.setAppointment_interval(dto.getAppointment_interval());
+        settings.setMax_cancellation_interval(dto.getMax_cancellation_interval());
+
+        // Dirty checking do JPA salva automaticamente
+        return settingsMapper.map(settings);
+    }
 }
