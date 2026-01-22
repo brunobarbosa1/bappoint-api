@@ -51,7 +51,6 @@ public class SettingsService {
         settings.setAppointment_interval(dto.getAppointment_interval());
         settings.setMax_cancellation_interval(dto.getMax_cancellation_interval());
 
-        // Dirty checking do JPA salva automaticamente
         return settingsMapper.map(settings);
     }
 }
