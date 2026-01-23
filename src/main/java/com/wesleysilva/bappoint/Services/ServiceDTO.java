@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ServiceDTO {
     private UUID id;
-    private UUID settings_id;
+    private UUID company_id;
     private String name;
     private Integer price;
     private Integer duration_minutes;
