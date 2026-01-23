@@ -44,23 +44,23 @@ public class ServiceService {
                 .collect(Collectors.toList());
     }
 
-    public ServiceDTO getServiceById(UUID id) {
+    public ServiceDTO getServiceById(UUID serviceId) {
         ServiceModel serviceModel = serviceRepository
-                .findById(id)
+                .findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
 
         return serviceMapper.map(serviceModel);
     }
 
-    void deleteService(UUID id){
-        serviceRepository.deleteById(id);
+    void deleteService(UUID serviceId){
+        serviceRepository.deleteById(serviceId);
     }
 
-    public ServiceDTO updateService(UUID id, ServiceDTO serviceDTO) {
-        Optional<ServiceModel> serviceModel = serviceRepository.findById(id);
+    public ServiceDTO updateService(UUID serviceId, ServiceDTO serviceDTO) {
+        Optional<ServiceModel> serviceModel = serviceRepository.findById(serviceId);
         if (serviceModel.isPresent()) {
             ServiceModel serviceUpdated = serviceMapper.map(serviceDTO);
-            serviceUpdated.setId(id);
+            serviceUpdated.setId(serviceId);
             ServiceModel serviceModelUpdated = serviceRepository.save(serviceUpdated);
             return serviceMapper.map(serviceModelUpdated);
         }

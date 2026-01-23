@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("company/{id}/services")
+@RequestMapping("company/{companyId}/services")
 @Tag(name = "dev/Services", description = "Manage company services")
 public class ServicesController {
 
@@ -25,8 +25,8 @@ public class ServicesController {
             summary = "",
             description = ""
     )
-    public ResponseEntity<String> createService(@PathVariable UUID id, @RequestBody ServiceDTO service){
-        service.setCompany_id(id);
+    public ResponseEntity<String> createService(@PathVariable UUID companyId, @RequestBody ServiceDTO service){
+        service.setCompany_id(companyId);
         ServiceDTO newService = serviceService.createService(service);
         return ResponseEntity.status(HttpStatus.CREATED).body(newService.toString());
 
@@ -42,13 +42,13 @@ public class ServicesController {
         return ResponseEntity.ok(serviceDTOS);
     }
 
-    @GetMapping("/list/{id}")
+    @GetMapping("/list/{serviceId}")
     @Operation(
             summary = "",
             description = ""
     )
-    public ResponseEntity<ServiceDTO> listServicesById(@PathVariable UUID id) {
-        ServiceDTO service = serviceService.getServiceById(id);
+    public ResponseEntity<ServiceDTO> listServicesById(@PathVariable UUID serviceId) {
+        ServiceDTO service = serviceService.getServiceById(serviceId);
         if (service != null) {
             return ResponseEntity.status(HttpStatus.OK).body(service);
         } else  {
@@ -56,27 +56,27 @@ public class ServicesController {
         }
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("delete/{serviceId}")
     @Operation(
             summary = "",
             description = ""
     )
-    public ResponseEntity<String> deleteService(@PathVariable UUID id){
-        if(serviceService.getServiceById(id) != null) {
-            serviceService.deleteService(id);
-            return ResponseEntity.ok("Service id: " + id + " delete successfully.");
+    public ResponseEntity<String> deleteService(@PathVariable UUID serviceId){
+        if(serviceService.getServiceById(serviceId) != null) {
+            serviceService.deleteService(serviceId);
+            return ResponseEntity.ok("Service id: " + serviceId + " delete successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{serviceId}")
     @Operation(
             summary = "",
             description = ""
     )
-    public ResponseEntity<ServiceDTO> updateService(@PathVariable UUID id, @RequestBody ServiceDTO service){
-        ServiceDTO company = serviceService.updateService(id, service);
+    public ResponseEntity<ServiceDTO> updateService(@PathVariable UUID serviceId, @RequestBody ServiceDTO service){
+        ServiceDTO company = serviceService.updateService(serviceId, service);
         if (company != null) {
             return ResponseEntity.status(HttpStatus.OK).body(company);
         } else  {
