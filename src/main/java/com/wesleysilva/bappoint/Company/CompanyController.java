@@ -40,13 +40,13 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(companyModel);
     }
 
-    @GetMapping("/list/{id}")
+    @GetMapping("/list/{companyId}")
     @Operation(
             summary = "",
             description = ""
     )
-    public ResponseEntity<CompanyDTO> listCompanyById(@PathVariable UUID id) {
-        CompanyDTO company = companyService.getCompanyById(id);
+    public ResponseEntity<CompanyDTO> listCompanyById(@PathVariable UUID companyId) {
+        CompanyDTO company = companyService.getCompanyById(companyId);
         if (company != null) {
             return ResponseEntity.status(HttpStatus.OK).body(company);
         } else  {
@@ -54,27 +54,27 @@ public class CompanyController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{companyId}")
     @Operation(
             summary = "",
             description = ""
     )
-    public ResponseEntity<String> deleteCompany(@PathVariable UUID id) {
-        if(companyService.getCompanyById(id) != null) {
-            companyService.deleteCompany(id);
-            return ResponseEntity.ok("Company id: " + id + " delete successfully.");
+    public ResponseEntity<String> deleteCompany(@PathVariable UUID companyId) {
+        if(companyService.getCompanyById(companyId) != null) {
+            companyService.deleteCompany(companyId);
+            return ResponseEntity.ok("Company id: " + companyId + " delete successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-    @PutMapping("edit/{id}")
+    @PutMapping("edit/{companyId}")
     @Operation(
             summary = "",
             description = ""
     )
-    public ResponseEntity<?> editCompany(@RequestBody CompanyDTO companyDTO, @PathVariable UUID id) {
-        CompanyDTO company = companyService.updateCompany(id, companyDTO);
+    public ResponseEntity<?> editCompany(@RequestBody CompanyDTO companyDTO, @PathVariable UUID companyId) {
+        CompanyDTO company = companyService.updateCompany(companyId, companyDTO);
         if (company != null) {
             return ResponseEntity.status(HttpStatus.OK).body(company);
         } else  {
