@@ -26,7 +26,7 @@ public class ServiceService {
 
     public ServiceDTO createService(UUID settingsId, ServiceDTO serviceDTO) {
 
-        ServiceModel serviceModel = serviceMapper.toEntityWithoutSettings(serviceDTO);
+        ServiceModel serviceModel = serviceMapper.toEntity(serviceDTO);
 
         SettingsModel settings = settingsRepository
                 .findById(settingsId)
@@ -36,20 +36,20 @@ public class ServiceService {
 
         serviceModel = serviceRepository.save(serviceModel);
 
-        return serviceMapper.map(serviceModel);
+        return serviceMapper.toDto(serviceModel);
     }
 
     public List<ServiceDTO> listServicesBySettings(UUID settingsId) {
         List<ServiceModel> serviceModels = serviceRepository.findBySettingsId(settingsId);
         return serviceModels.stream()
-                .map(serviceMapper::map)
+                .map(serviceMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<ServiceDTO> listAllServices() {
         List<ServiceModel> serviceModels = serviceRepository.findAll();
         return serviceModels.stream()
-                .map(serviceMapper::map)
+                .map(serviceMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +57,7 @@ public class ServiceService {
         ServiceModel serviceModel = serviceRepository
                 .findById(serviceId)
                 .orElseThrow(() -> new RuntimeException("Service not found"));
-        return serviceMapper.map(serviceModel);
+        return serviceMapper.toDto(serviceModel);
     }
 
     public void deleteService(UUID serviceId) {
@@ -76,7 +76,7 @@ public class ServiceService {
             serviceToUpdate.setIs_active(serviceDTO.getIs_active());
 
             ServiceModel savedService = serviceRepository.save(serviceToUpdate);
-            return serviceMapper.map(savedService);
+            return serviceMapper.toDto(savedService);
         }
 
         return null;

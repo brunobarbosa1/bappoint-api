@@ -19,23 +19,23 @@ public class CompanyService {
 
 
     public CompanyDTO createCompany(CompanyDTO companyDTO) {
-        CompanyModel companyModel = companyMapper.map(companyDTO);
+        CompanyModel companyModel = companyMapper.toEntity(companyDTO);
         companyModel = companyRepository.save(companyModel);
 
-        return companyMapper.map(companyModel);
+        return companyMapper.toDto(companyModel);
     }
 
     public List<CompanyDTO> listCompanies() {
        List<CompanyModel> companyModel = companyRepository.findAll();
         return companyModel.stream()
-                .map(companyMapper::map)
+                .map(companyMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public CompanyDTO getCompanyById(UUID id) {
         CompanyModel companyModel = companyRepository.findById(id).orElse(null);
         assert companyModel != null;
-        return companyMapper.map(companyModel);
+        return companyMapper.toDto(companyModel);
     }
 
     void deleteCompany(UUID id) {
@@ -45,10 +45,10 @@ public class CompanyService {
     public CompanyDTO updateCompany(UUID id, CompanyDTO companyDTO) {
         Optional<CompanyModel> companyModel = companyRepository.findById(id);
         if (companyModel.isPresent()) {
-            CompanyModel companyUpdated = companyMapper.map(companyDTO);
+            CompanyModel companyUpdated = companyMapper.toEntity(companyDTO);
             companyUpdated.setId(id);
             CompanyModel updatedCompanyModel = companyRepository.save(companyUpdated);
-            return companyMapper.map(updatedCompanyModel);
+            return companyMapper.toDto(updatedCompanyModel);
         }
         return null;
     }

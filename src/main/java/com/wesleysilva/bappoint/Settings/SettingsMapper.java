@@ -29,7 +29,7 @@ public class SettingsMapper {
         if (settingsDTO.getServices() != null) {
             List<ServiceModel> serviceModels = settingsDTO.getServices()
                     .stream()
-                    .map(serviceMapper::toEntityWithoutSettings)  // ← SEM circular reference
+                    .map(serviceMapper::toEntity)  // ← SEM circular reference
                     .peek(service -> service.setSettings(settingsModel))
                     .collect(Collectors.toList());
             settingsModel.setServices(serviceModels);
@@ -56,7 +56,7 @@ public class SettingsMapper {
         if (settingsModel.getServices() != null) {
             settingsDTO.setServices(
                     settingsModel.getServices().stream()
-                            .map(serviceMapper::map)
+                            .map(serviceMapper::toDto)
                             .collect(Collectors.toList())
             );
         }

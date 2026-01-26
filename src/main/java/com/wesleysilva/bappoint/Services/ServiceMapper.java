@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ServiceMapper {
 
-    public ServiceModel toEntityWithoutSettings(ServiceDTO serviceDTO) {
+    public ServiceModel toEntity(ServiceDTO serviceDTO) {
         ServiceModel serviceModel = new ServiceModel();
         serviceModel.setId(serviceDTO.getId());
         serviceModel.setName(serviceDTO.getName());
@@ -15,7 +15,7 @@ public class ServiceMapper {
         return serviceModel;
     }
 
-    public ServiceDTO map(ServiceModel serviceModel) {
+    public ServiceDTO toDto(ServiceModel serviceModel) {
         ServiceDTO serviceDTO = new ServiceDTO();
         serviceDTO.setId(serviceModel.getId());
         serviceDTO.setName(serviceModel.getName());

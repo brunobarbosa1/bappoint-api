@@ -12,7 +12,7 @@ public class CompanyMapper {
         this.settingsMapper = settingsMapper;
     }
 
-    public CompanyModel map(CompanyDTO companyDTO) {
+    public CompanyModel toEntity(CompanyDTO companyDTO) {
         CompanyModel companyModel = new CompanyModel();
         companyModel.setId(companyDTO.getId());
         companyModel.setName(companyDTO.getName());
@@ -28,7 +28,7 @@ public class CompanyMapper {
         return companyModel;
     }
 
-    public CompanyDTO map(CompanyModel companyModel) {
+    public CompanyDTO toDto(CompanyModel companyModel) {
         CompanyDTO companyDTO = new CompanyDTO();
         companyDTO.setId(companyModel.getId());
         companyDTO.setName(companyModel.getName());
