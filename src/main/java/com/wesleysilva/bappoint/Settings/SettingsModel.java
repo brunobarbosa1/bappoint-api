@@ -1,5 +1,6 @@
 package com.wesleysilva.bappoint.Settings;
 
+import com.wesleysilva.bappoint.OperatingHours.OperatingHoursModel;
 import com.wesleysilva.bappoint.Services.ServiceModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,4 +27,7 @@ public class SettingsModel {
 
     @OneToMany(mappedBy = "settings", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceModel> services = new ArrayList<>();
+
+    @OneToMany(mappedBy = "settings", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OperatingHoursModel> operatingHours = new ArrayList<>();
 }

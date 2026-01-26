@@ -1,5 +1,7 @@
 package com.wesleysilva.bappoint.Settings;
 
+import com.wesleysilva.bappoint.OperatingHours.OperatingHoursMapper;
+import com.wesleysilva.bappoint.OperatingHours.OperatingHoursModel;
 import com.wesleysilva.bappoint.Services.ServiceMapper;
 import com.wesleysilva.bappoint.Services.ServiceModel;
 import org.springframework.stereotype.Component;
@@ -11,9 +13,11 @@ import java.util.stream.Collectors;
 @Component
 public class SettingsMapper {
     private final ServiceMapper serviceMapper;
+    private final OperatingHoursMapper operatingHoursMapper;
 
-    public SettingsMapper(ServiceMapper serviceMapper) {
+    public SettingsMapper(ServiceMapper serviceMapper, OperatingHoursMapper operatingHoursMapper) {
         this.serviceMapper = serviceMapper;
+        this.operatingHoursMapper = operatingHoursMapper;
     }
 
     public SettingsModel map(SettingsDTO settingsDTO) {
@@ -31,6 +35,15 @@ public class SettingsMapper {
             settingsModel.setServices(serviceModels);
         }
 
+        if (settingsDTO.getOperating_hours() != null) {
+            List<OperatingHoursModel> operatingHoursModels = settingsDTO.getOperating_hours()
+                    .stream()
+                    .map(operatingHoursMapper::map)  // ← SEM circular reference
+                    .peek(service -> service.setSettings(settingsModel))
+                    .collect(Collectors.toList());
+            settingsModel.setOperatingHours(operatingHoursModels);
+        }
+
         return settingsModel;
     }
 
@@ -44,6 +57,14 @@ public class SettingsMapper {
             settingsDTO.setServices(
                     settingsModel.getServices().stream()
                             .map(serviceMapper::map)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        if (settingsModel.getOperatingHours() != null) {
+            settingsDTO.setOperating_hours(
+                    settingsModel.getOperatingHours().stream()
+                            .map(operatingHoursMapper::map)
                             .collect(Collectors.toList())
             );
         }

@@ -1,5 +1,6 @@
 package com.wesleysilva.bappoint.Settings;
 
+import com.wesleysilva.bappoint.OperatingHours.OperatingHoursDTO;
 import com.wesleysilva.bappoint.Services.ServiceDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +21,7 @@ public class SettingsDTO {
     private Integer max_cancellation_interval;
 
     private List<ServiceDTO> services;
+
+    private List<OperatingHoursDTO>  operating_hours;
+
 }
