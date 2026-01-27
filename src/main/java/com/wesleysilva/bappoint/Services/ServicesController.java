@@ -49,7 +49,7 @@ public class ServicesController {
                 .map(CompanyModel::getSettings)
                 .orElseThrow(() -> new RuntimeException("Company or settings not found"));
 
-        List<ServiceDTO> serviceDTOS = serviceService.listServicesBySettings(settings.getId());
+        List<ServiceDTO> serviceDTOS = serviceService.listAllServices();
         return ResponseEntity.ok(serviceDTOS);
     }
 
