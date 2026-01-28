@@ -1,6 +1,7 @@
 package com.wesleysilva.bappoint.OffDay;
 
 import com.wesleysilva.bappoint.Settings.SettingsModel;
+import com.wesleysilva.bappoint.enums.OffDaysType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,6 +25,6 @@ public class OffDayModel {
 
     private Date date;
 
-    private String type;  //Should be an ENUM
-
+    @Enumerated(EnumType.STRING)
+    private OffDaysType OffDaystype;
 }
