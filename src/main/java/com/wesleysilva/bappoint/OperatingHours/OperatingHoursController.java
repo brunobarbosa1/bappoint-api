@@ -73,4 +73,21 @@ public class OperatingHoursController {
     void deleteOperatingHoursById(@PathVariable UUID operatingHoursId) {
         operatingHoursService.deleteOperatingHoursById(operatingHoursId);
     }
+
+    @PutMapping("/update/{operatingHoursId}")
+    @Operation(
+            summary = "",
+            description = ""
+    )
+    public ResponseEntity<OperatingHoursDTO> updateOperatingHours(
+            @PathVariable UUID operatingHoursId,
+            @RequestBody OperatingHoursDTO operatingHoursDTO
+    ){
+        OperatingHoursDTO updateOperatingHours = operatingHoursService.updateService(operatingHoursId, operatingHoursDTO);
+        if (updateOperatingHours != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updateOperatingHours);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

@@ -1,10 +1,13 @@
 package com.wesleysilva.bappoint.OperatingHours;
 
+import com.wesleysilva.bappoint.Services.ServiceDTO;
+import com.wesleysilva.bappoint.Services.ServiceModel;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.Settings.SettingsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,6 +54,24 @@ public class OperatingHoursService {
 
     public void deleteOperatingHoursById(UUID operatingHoursId) {
         operatingHoursRepository.deleteById(operatingHoursId);
+    }
+
+    public OperatingHoursDTO updateService(UUID operatingHoursID, OperatingHoursDTO operatingHoursDTO) {
+        Optional<OperatingHoursModel> existingOperatingHours = operatingHoursRepository.findById(operatingHoursID);
+
+        if (existingOperatingHours.isPresent()) {
+            OperatingHoursModel operatingHoursToUpdate = existingOperatingHours.get();
+
+            operatingHoursToUpdate.setWeekday(operatingHoursDTO.getWeekday());
+            operatingHoursToUpdate.setStart_date(operatingHoursDTO.getStart_date());
+            operatingHoursToUpdate.setEnd_date(operatingHoursDTO.getEnd_date());
+            operatingHoursToUpdate.setIs_active(operatingHoursDTO.getIs_active());
+
+            OperatingHoursModel savedOperatingHours = operatingHoursRepository.save(operatingHoursToUpdate);
+            return operatingHoursMapper.toDto(savedOperatingHours);
+        }
+
+        return null;
     }
 
 }
