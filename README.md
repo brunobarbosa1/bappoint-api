@@ -9,7 +9,7 @@ Backend API for a service scheduling SaaS system.
 
 ```
 Backend: Spring Boot 3.x + Java 21
-Database: PostgreSQL (Supabase)
+Database: PostgreSQL (NEON Database)
 ORM: Spring Data JPA + Hibernate
 Containerization: Docker
 Validation: Bean Validation (Jakarta)
