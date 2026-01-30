@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppointmentsDTO {
+public class AppointmentDTO {
     private UUID id;
 
     private String costumerName;
