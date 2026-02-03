@@ -1,15 +1,23 @@
 package com.wesleysilva.bappoint.Company;
 
+import com.wesleysilva.bappoint.Appointments.AppointmentMapper;
+import com.wesleysilva.bappoint.Appointments.AppointmentModel;
+import com.wesleysilva.bappoint.Services.ServiceModel;
 import com.wesleysilva.bappoint.Settings.SettingsMapper;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class CompanyMapper {
     private final SettingsMapper settingsMapper;
+    private final AppointmentMapper appointmentMapper;
 
-    public CompanyMapper(SettingsMapper settingsMapper) {
+    public CompanyMapper(SettingsMapper settingsMapper, AppointmentMapper appointmentMapper) {
         this.settingsMapper = settingsMapper;
+        this.appointmentMapper = appointmentMapper;
     }
 
     public CompanyModel toEntity(CompanyDTO companyDTO) {
@@ -25,6 +33,15 @@ public class CompanyMapper {
             companyModel.setSettings(settingsModel);
         }
 
+        if (companyDTO.getAppointments() != null) {
+            List<AppointmentModel> appointmentModels = companyDTO.getAppointments()
+                    .stream()
+                    .map(appointmentMapper::toEntity)
+                    .peek(appointment -> ((AppointmentModel) appointment).setCompany(companyModel))
+                    .collect(Collectors.toList());
+            companyModel.setAppointments(appointmentModels);
+        }
+
         return companyModel;
     }
 
@@ -38,6 +55,14 @@ public class CompanyMapper {
 
         if (companyModel.getSettings() != null) {
             companyDTO.setSettings(settingsMapper.map(companyModel.getSettings()));
+        }
+
+        if (companyModel.getAppointments() != null) {
+            companyDTO.setAppointments(
+                    companyModel.getAppointments().stream()
+                            .map(appointmentMapper::toDto)
+                            .collect(Collectors.toList())
+            );
         }
 
         return companyDTO;
