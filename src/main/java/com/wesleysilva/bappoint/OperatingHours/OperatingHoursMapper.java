@@ -8,8 +8,8 @@ public class OperatingHoursMapper {
         OperatingHoursModel operatingHoursModel = new OperatingHoursModel();
 
         operatingHoursModel.setId(operatingHoursDTO.getId());
-        operatingHoursModel.setStart_date(operatingHoursDTO.getStart_date());
-        operatingHoursModel.setEnd_date(operatingHoursDTO.getEnd_date());
+        operatingHoursModel.setStart_time(operatingHoursDTO.getStart_time());
+        operatingHoursModel.setEnd_time(operatingHoursDTO.getEnd_time());
         operatingHoursModel.setWeekday(operatingHoursDTO.getWeekday());
         operatingHoursModel.setIs_active(operatingHoursDTO.getIs_active());
 
@@ -20,8 +20,8 @@ public class OperatingHoursMapper {
         OperatingHoursDTO operatingHoursDTO = new OperatingHoursDTO();
 
         operatingHoursDTO.setId(operatingHoursModel.getId());
-        operatingHoursDTO.setStart_date(operatingHoursModel.getStart_date());
-        operatingHoursDTO.setEnd_date(operatingHoursModel.getEnd_date());
+        operatingHoursDTO.setStart_time(operatingHoursModel.getStart_time());
+        operatingHoursDTO.setEnd_time(operatingHoursModel.getEnd_time());
         operatingHoursDTO.setWeekday(operatingHoursModel.getWeekday());
         operatingHoursDTO.setIs_active(operatingHoursModel.getIs_active());
 

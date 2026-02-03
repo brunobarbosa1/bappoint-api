@@ -66,8 +66,8 @@ public class OperatingHoursService {
             OperatingHoursModel operatingHoursToUpdate = existingOperatingHours.get();
 
             operatingHoursToUpdate.setWeekday(operatingHoursDTO.getWeekday());
-            operatingHoursToUpdate.setStart_date(operatingHoursDTO.getStart_date());
-            operatingHoursToUpdate.setEnd_date(operatingHoursDTO.getEnd_date());
+            operatingHoursToUpdate.setStart_time(operatingHoursDTO.getStart_time());
+            operatingHoursToUpdate.setEnd_time(operatingHoursDTO.getEnd_time());
             operatingHoursToUpdate.setIs_active(operatingHoursDTO.getIs_active());
 
             OperatingHoursModel savedOperatingHours = operatingHoursRepository.save(operatingHoursToUpdate);

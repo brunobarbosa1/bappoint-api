@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -52,14 +53,14 @@ public class AppointmentService {
 
         OperatingHoursModel operatingHours = hours.getFirst();
 
-        LocalDateTime from = operatingHours.getStart_date();
-        LocalDateTime to = operatingHours.getEnd_date();
+        LocalTime from = operatingHours.getStart_time();
+        LocalTime to = operatingHours.getEnd_time();
 
         List<SlotTimesDTO> slots = new ArrayList<>();
-        LocalDateTime current = from;
+        LocalTime current = from;
 
         while (current.isBefore(to)) {
-            LocalDateTime next = current.plusMinutes(appointmentInterval.getMinutes());
+            LocalTime next = current.plusMinutes(appointmentInterval.getMinutes());
             slots.add(new SlotTimesDTO(current.toString(), next.toString()));
             current = next;
         }

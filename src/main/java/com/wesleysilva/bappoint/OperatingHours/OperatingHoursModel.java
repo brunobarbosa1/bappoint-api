@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,8 +25,8 @@ public class OperatingHoursModel {
 
     Boolean is_active;
 
-    LocalDateTime start_date;
-    LocalDateTime end_date;
+    LocalTime start_time;
+    LocalTime end_time;
 
     @ManyToOne
     @JoinColumn(name = "settings_id")
