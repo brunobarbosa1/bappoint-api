@@ -5,7 +5,7 @@ import com.wesleysilva.bappoint.enums.OffDaysType;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +23,7 @@ public class OffDaysModel {
 
     private String reason;
 
-    private Date date;
+    private LocalDate date;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "off_days_type")
