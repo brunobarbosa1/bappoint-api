@@ -27,7 +27,7 @@ public class OperatingHoursModel {
     LocalDateTime start_date;
     LocalDateTime end_date;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "settings_id")
     private SettingsModel settings;
 
