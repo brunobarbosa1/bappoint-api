@@ -39,8 +39,7 @@ public class CompanyModel {
     @JoinColumn(name = "settings_id")
     private SettingsModel settings;
 
-    @OneToMany
-    @JoinColumn(name = "appointment_id")
+    @OneToMany(mappedBy = "company")
     private List<AppointmentModel> appointments;
 
 }

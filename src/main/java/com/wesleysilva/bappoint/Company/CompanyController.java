@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newCompany.toString());
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/list")
     @Operation(
             summary = "",
@@ -40,6 +42,7 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.OK).body(companyModel);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/list/{companyId}")
     @Operation(
             summary = "",

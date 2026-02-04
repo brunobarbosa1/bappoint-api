@@ -33,15 +33,6 @@ public class CompanyMapper {
             companyModel.setSettings(settingsModel);
         }
 
-        if (companyDTO.getAppointments() != null) {
-            List<AppointmentModel> appointmentModels = companyDTO.getAppointments()
-                    .stream()
-                    .map(appointmentMapper::toEntity)
-                    .peek(appointment -> ((AppointmentModel) appointment).setCompany(companyModel))
-                    .collect(Collectors.toList());
-            companyModel.setAppointments(appointmentModels);
-        }
-
         return companyModel;
     }
 
@@ -60,7 +51,7 @@ public class CompanyMapper {
         if (companyModel.getAppointments() != null) {
             companyDTO.setAppointments(
                     companyModel.getAppointments().stream()
-                            .map(appointmentMapper::toDto)
+                            .map(appointmentMapper::toResponseDTO)
                             .collect(Collectors.toList())
             );
         }
