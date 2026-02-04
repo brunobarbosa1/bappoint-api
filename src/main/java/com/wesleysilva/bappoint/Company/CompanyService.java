@@ -1,6 +1,7 @@
 package com.wesleysilva.bappoint.Company;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class CompanyService {
         return companyMapper.toDto(companyModel);
     }
 
+    @Transactional(readOnly = true)
     public List<CompanyDTO> listCompanies() {
        List<CompanyModel> companyModel = companyRepository.findAll();
         return companyModel.stream()
@@ -32,9 +34,13 @@ public class CompanyService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CompanyDTO getCompanyById(UUID id) {
         CompanyModel companyModel = companyRepository.findById(id).orElse(null);
         assert companyModel != null;
+        if (companyModel.getAppointments() != null) {
+            companyModel.getAppointments().size();
+        }
         return companyMapper.toDto(companyModel);
     }
 
