@@ -19,4 +19,6 @@ public class OperatingHoursDTO {
     private Boolean is_active;
     private LocalTime start_time;
     private LocalTime end_time;
+    private LocalTime lunch_start_time;
+    private LocalTime lunch_end_time;
 }

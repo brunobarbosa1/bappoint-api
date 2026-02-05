@@ -28,6 +28,9 @@ public class OperatingHoursModel {
     LocalTime start_time;
     LocalTime end_time;
 
+    LocalTime lunch_start_time;
+    LocalTime lunch_end_time;
+
     @ManyToOne
     @JoinColumn(name = "settings_id")
     private SettingsModel settings;
