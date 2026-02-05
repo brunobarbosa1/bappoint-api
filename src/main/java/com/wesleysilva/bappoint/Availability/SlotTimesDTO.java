@@ -1,4 +1,4 @@
-package com.wesleysilva.bappoint.Appointments.SlotTimes;
+package com.wesleysilva.bappoint.Availability;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
