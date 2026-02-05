@@ -1,7 +1,7 @@
 package com.wesleysilva.bappoint.Appointments;
 
-import com.wesleysilva.bappoint.Appointments.SlotTimes.SlotTimesDTO;
-import com.wesleysilva.bappoint.Company.CompanyDTO;
+import com.wesleysilva.bappoint.Availability.SlotTimesDTO;
+import com.wesleysilva.bappoint.Availability.SlotsTimesService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +18,12 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final AppointmentMapper appointmentMapper;
+    private final SlotsTimesService slotsTimesService;
 
-    public AppointmentController(AppointmentService appointmentService, AppointmentMapper appointmentMapper) {
+    public AppointmentController(AppointmentService appointmentService, AppointmentMapper appointmentMapper, SlotsTimesService slotsTimesService) {
         this.appointmentService = appointmentService;
         this.appointmentMapper = appointmentMapper;
+        this.slotsTimesService = slotsTimesService;
     }
 
     @GetMapping("/available-times")
@@ -30,7 +32,7 @@ public class AppointmentController {
             description = ""
     )
     public List<SlotTimesDTO> getAvailableTimes(@PathVariable UUID companyId, @RequestParam String date) {
-        return appointmentService.findAvailableSlots(companyId, date);
+        return slotsTimesService.findAvailableSlots(companyId, date);
     }
 
     @PostMapping("/create")
