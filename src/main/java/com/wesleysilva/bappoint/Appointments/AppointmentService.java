@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -84,15 +85,55 @@ public class AppointmentService {
     }
 
 
-    public List<AppointmentDTO> listAppointments() {
+    public List<AppointmentResponseDTO> listAppointments() {
         List<AppointmentModel> appointments = appointmentRepository.findAll();
         return appointments.stream()
-                .map(appointmentMapper::toDto)
+                .map(appointmentMapper::toResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public AppointmentResponseDTO getAppointmentById(UUID appointmentId) {
+        AppointmentModel appointment = appointmentRepository.findById(appointmentId).orElseThrow(
+                () -> new RuntimeException("Appointment not found"));
+
+        return appointmentMapper.toResponseDTO(appointment);
+    }
+
+    void deleteAppointment(UUID appointmentId) {
+        appointmentRepository.deleteById(appointmentId);
+    }
+
+    public AppointmentResponseDTO updateAppointment(UUID appointmentId, AppointmentResponseDTO appointmentDto) {
+        Optional<AppointmentModel> existingAppointment = appointmentRepository.findById(appointmentId);
+        if (existingAppointment.isPresent()) {
+            AppointmentModel appointmentToUpdate = existingAppointment.get();
+
+            appointmentToUpdate.setAppointmentDate(appointmentDto.getAppointmentDate());
+            appointmentToUpdate.setStartTime(appointmentDto.getStartTime());
+            appointmentToUpdate.setEndTime(appointmentDto.getEndTime());
+
+            List<ServiceModel> services = appointmentDto.getServiceIds().stream()
+                    .map(serviceId -> serviceRepository.findById(serviceId)
+                            .orElseThrow(() -> new RuntimeException("Service not found: " + serviceId)))
+                    .collect(Collectors.toList());
+            appointmentToUpdate.setServices(services);
+
+            appointmentToUpdate.setCostumerName(appointmentDto.getCostumerName());
+            appointmentToUpdate.setCostumerEmail(appointmentDto.getCostumerEmail());
+            appointmentToUpdate.setCostumerPhone(appointmentDto.getCostumerPhone());
+            appointmentToUpdate.setTotalAmount(appointmentDto.getTotalAmount());
+            appointmentToUpdate.setAppointmentStatus(appointmentDto.getAppointmentStatus());
+
+            return appointmentMapper.toResponseDTO(appointmentRepository.save(appointmentToUpdate));
+        }
+        return null;
+
     }
 
     @Transactional(readOnly = true)
     public List<AppointmentModel> findByCompanyId(UUID companyId) {
-        return appointmentRepository.findByCompanyId(companyId);  // Carrega todos
+        return appointmentRepository.findByCompanyId(companyId);
     }
+
+
 }
