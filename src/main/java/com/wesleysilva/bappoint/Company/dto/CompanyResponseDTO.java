@@ -14,7 +14,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyDTO {
+public class CompanyResponseDTO {
 
     private UUID id;
 
