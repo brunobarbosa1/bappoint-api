@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class CompanyController {
                     @ApiResponse(responseCode = "400", description = "Invalid company data provided")
             }
     )
-    public ResponseEntity<CompanyDTO> createCompany(@RequestBody CompanyDTO company) {
+    public ResponseEntity<CompanyDTO> createCompany(@Valid @RequestBody CompanyDTO company) {
         CompanyDTO newCompany = companyService.createCompany(company);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCompany);
     }
