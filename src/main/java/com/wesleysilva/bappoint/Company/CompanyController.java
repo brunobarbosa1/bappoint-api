@@ -1,5 +1,6 @@
 package com.wesleysilva.bappoint.Company;
 
+import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
@@ -72,8 +73,8 @@ public class CompanyController {
                     @ApiResponse(responseCode = "404", description = "Company not found")
             }
     )
-    public ResponseEntity<CompanyResponseDTO> getCompanyById(@PathVariable UUID companyId) {
-        CompanyResponseDTO company = companyService.getCompanyById(companyId);
+    public ResponseEntity<CompanyDetailsResponseDTO> getCompanyById(@PathVariable UUID companyId) {
+        CompanyDetailsResponseDTO company = companyService.getCompanyById(companyId);
         if (company != null) {
             return ResponseEntity.ok(company);
         } else {

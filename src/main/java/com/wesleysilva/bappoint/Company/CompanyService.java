@@ -1,5 +1,6 @@
 package com.wesleysilva.bappoint.Company;
 
+import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
@@ -38,13 +39,13 @@ public class CompanyService {
     }
 
     @Transactional(readOnly = true)
-    public CompanyResponseDTO getCompanyById(UUID id) {
+    public CompanyDetailsResponseDTO getCompanyById(UUID id) {
         CompanyModel companyModel = companyRepository.findById(id).orElse(null);
         assert companyModel != null;
         if (companyModel.getAppointments() != null) {
             companyModel.getAppointments().size();
         }
-        return companyMapper.toResponseDTO(companyModel);
+        return companyMapper.toDetailsResponseDTO(companyModel);
     }
 
     void deleteCompany(UUID id) {
