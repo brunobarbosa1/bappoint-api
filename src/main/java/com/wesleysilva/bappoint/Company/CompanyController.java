@@ -1,5 +1,8 @@
 package com.wesleysilva.bappoint.Company;
 
+import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
+import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
+import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,12 +35,12 @@ public class CompanyController {
             responses = {
                     @ApiResponse(responseCode = "201", description = "Company successfully created",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CompanyDTO.class))),
+                                    schema = @Schema(implementation = CompanyResponseDTO.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid company data provided")
             }
     )
-    public ResponseEntity<CompanyDTO> createCompany(@Valid @RequestBody CompanyDTO company) {
-        CompanyDTO newCompany = companyService.createCompany(company);
+    public ResponseEntity<CompanyResponseDTO> createCompany(@Valid @RequestBody CreateCompanyDTO company) {
+        CompanyResponseDTO newCompany = companyService.createCompany(company);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCompany);
     }
 
@@ -49,11 +52,11 @@ public class CompanyController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "List successfully retrieved",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CompanyDTO.class)))
+                                    schema = @Schema(implementation = CompanyResponseDTO.class)))
             }
     )
-    public ResponseEntity<List<CompanyDTO>> listCompanies() {
-        List<CompanyDTO> companyList = companyService.listCompanies();
+    public ResponseEntity<List<CompanyResponseDTO>> listCompanies() {
+        List<CompanyResponseDTO> companyList = companyService.listCompanies();
         return ResponseEntity.ok(companyList);
     }
 
@@ -65,12 +68,12 @@ public class CompanyController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Company found",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CompanyDTO.class))),
+                                    schema = @Schema(implementation = CompanyResponseDTO.class))),
                     @ApiResponse(responseCode = "404", description = "Company not found")
             }
     )
-    public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable UUID companyId) {
-        CompanyDTO company = companyService.getCompanyById(companyId);
+    public ResponseEntity<CompanyResponseDTO> getCompanyById(@PathVariable UUID companyId) {
+        CompanyResponseDTO company = companyService.getCompanyById(companyId);
         if (company != null) {
             return ResponseEntity.ok(company);
         } else {
@@ -81,7 +84,7 @@ public class CompanyController {
     @DeleteMapping("/delete/{companyId}")
     @Operation(
             summary = "Delete a company",
-            description = "Permanently removes a company from the system by its UUID.",
+            description = "Permanently removes a company from the system by UUID.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Company successfully deleted"),
                     @ApiResponse(responseCode = "404", description = "Company not found")
@@ -103,12 +106,12 @@ public class CompanyController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Company successfully updated",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = CompanyDTO.class))),
+                                    schema = @Schema(implementation = CompanyResponseDTO.class))),
                     @ApiResponse(responseCode = "404", description = "Company not found")
             }
     )
-    public ResponseEntity<?> updateCompany(@RequestBody CompanyDTO companyDTO, @PathVariable UUID companyId) {
-        CompanyDTO company = companyService.updateCompany(companyId, companyDTO);
+    public ResponseEntity<?> updateCompany(@PathVariable UUID companyId, @Valid @RequestBody UpdateCompanyDTO companyDTO) {
+        CompanyResponseDTO company = companyService.updateCompany(companyId, companyDTO);
         if (company != null) {
             return ResponseEntity.ok(company);
         } else {
