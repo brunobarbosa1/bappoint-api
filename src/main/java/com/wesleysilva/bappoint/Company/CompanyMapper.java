@@ -1,6 +1,9 @@
 package com.wesleysilva.bappoint.Company;
 
 import com.wesleysilva.bappoint.Appointments.AppointmentMapper;
+import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
+import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
+import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
 import com.wesleysilva.bappoint.Settings.SettingsMapper;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import org.springframework.stereotype.Component;
@@ -17,24 +20,23 @@ public class CompanyMapper {
         this.appointmentMapper = appointmentMapper;
     }
 
-    public CompanyModel toEntity(CompanyDTO companyDTO) {
+    public CompanyModel toCreate(CreateCompanyDTO createCompanyDTO) {
         CompanyModel companyModel = new CompanyModel();
-        companyModel.setId(companyDTO.getId());
-        companyModel.setName(companyDTO.getName());
-        companyModel.setEmail(companyDTO.getEmail());
-        companyModel.setPhone(companyDTO.getPhone());
-        companyModel.setAddress(companyDTO.getAddress());
+        companyModel.setName(createCompanyDTO.getName());
+        companyModel.setEmail(createCompanyDTO.getEmail());
+        companyModel.setPhone(createCompanyDTO.getPhone());
+        companyModel.setAddress(createCompanyDTO.getAddress());
 
-        if (companyDTO.getSettings() != null) {
-            SettingsModel settingsModel = settingsMapper.map(companyDTO.getSettings());
+        if (createCompanyDTO.getSettings() != null) {
+            SettingsModel settingsModel = settingsMapper.map(createCompanyDTO.getSettings());
             companyModel.setSettings(settingsModel);
         }
 
         return companyModel;
     }
 
-    public CompanyDTO toDto(CompanyModel companyModel) {
-        CompanyDTO companyDTO = new CompanyDTO();
+    public CompanyResponseDTO toResponseDTO(CompanyModel companyModel) {
+        CompanyResponseDTO companyDTO = new CompanyResponseDTO();
         companyDTO.setId(companyModel.getId());
         companyDTO.setName(companyModel.getName());
         companyDTO.setEmail(companyModel.getEmail());
@@ -54,5 +56,18 @@ public class CompanyMapper {
         }
 
         return companyDTO;
+    }
+
+    public CompanyModel toUpdateCompany(UpdateCompanyDTO updateCompanyDTO, CompanyModel existingCompany) {
+        if (updateCompanyDTO.getName() != null) existingCompany.setName(updateCompanyDTO.getName());
+        if (updateCompanyDTO.getEmail() != null) existingCompany.setEmail(updateCompanyDTO.getEmail());
+        if (updateCompanyDTO.getPhone() != null) existingCompany.setPhone(updateCompanyDTO.getPhone());
+        if (updateCompanyDTO.getAddress() != null) existingCompany.setAddress(updateCompanyDTO.getAddress());
+
+        if (updateCompanyDTO.getSettings() != null) {
+            existingCompany.setSettings(settingsMapper.map(updateCompanyDTO.getSettings()));
+        }
+
+        return existingCompany;
     }
 }
