@@ -1,6 +1,7 @@
 package com.wesleysilva.bappoint.Company;
 
 import com.wesleysilva.bappoint.Appointments.AppointmentMapper;
+import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
@@ -37,6 +38,20 @@ public class CompanyMapper {
 
     public CompanyResponseDTO toResponseDTO(CompanyModel companyModel) {
         CompanyResponseDTO companyDTO = new CompanyResponseDTO();
+        companyDTO.setName(companyModel.getName());
+        companyDTO.setEmail(companyModel.getEmail());
+        companyDTO.setPhone(companyModel.getPhone());
+        companyDTO.setAddress(companyModel.getAddress());
+
+        if (companyModel.getSettings() != null) {
+            companyDTO.setSettings(settingsMapper.map(companyModel.getSettings()));
+        }
+
+        return companyDTO;
+    }
+
+    public CompanyDetailsResponseDTO toDetailsResponseDTO(CompanyModel companyModel) {
+        CompanyDetailsResponseDTO companyDTO = new CompanyDetailsResponseDTO();
         companyDTO.setId(companyModel.getId());
         companyDTO.setName(companyModel.getName());
         companyDTO.setEmail(companyModel.getEmail());
