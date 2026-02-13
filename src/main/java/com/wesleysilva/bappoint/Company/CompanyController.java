@@ -75,11 +75,7 @@ public class CompanyController {
     )
     public ResponseEntity<CompanyDetailsResponseDTO> getCompanyById(@PathVariable UUID companyId) {
         CompanyDetailsResponseDTO company = companyService.getCompanyById(companyId);
-        if (company != null) {
-            return ResponseEntity.ok(company);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return ResponseEntity.ok(company);
     }
 
     @DeleteMapping("/delete/{companyId}")
