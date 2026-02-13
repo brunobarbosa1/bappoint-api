@@ -2,16 +2,15 @@ package com.wesleysilva.bappoint.Appointments;
 
 import com.wesleysilva.bappoint.Company.CompanyModel;
 import com.wesleysilva.bappoint.Services.ServiceModel;
-import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,29 +26,29 @@ public class AppointmentModel {
     @Column(name = "appointment_id")
     private UUID id;
 
-    @Column(name = "costumer_name")
+    @Column(name = "costumer_name", nullable = false, length = 100)
     private String costumerName;
 
-    @Column(name = "costumer_email")
+    @Column(name = "costumer_email", nullable = false, length = 150)
     private String costumerEmail;
 
-    @Column(name = "costumer_phone")
+    @Column(name = "costumer_phone", nullable = false, length = 30)
     private String costumerPhone;
 
-    @Column(name = "appointment_date")
+    @Column(name = "appointment_date", nullable = false)
     private LocalDate appointmentDate;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time")
+    @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
-    @Column(name = "total_amount")
-    private double totalAmount;
+    @Column(name = "total_amount", nullable = false)
+    private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "appointment_status")
+    @Column(name = "appointment_status", nullable = false)
     private AppointmentStatus appointmentStatus;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -60,8 +59,8 @@ public class AppointmentModel {
     )
     private List<ServiceModel> services;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
     private CompanyModel company;
-
 }
+
