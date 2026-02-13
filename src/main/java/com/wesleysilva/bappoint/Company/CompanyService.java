@@ -4,6 +4,8 @@ import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
+import com.wesleysilva.bappoint.exceptions.CompanyDeleteException;
+import com.wesleysilva.bappoint.exceptions.CompanyNotFoundException;
 import com.wesleysilva.bappoint.exceptions.EmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,7 @@ public class CompanyService {
 
 
     public CompanyResponseDTO createCompany(CreateCompanyDTO createCompanyDTO) {
-        if (companyRepository.existsEmail(createCompanyDTO.getEmail())) {
+        if (companyRepository.existsByEmail(createCompanyDTO.getEmail())) {
             throw new EmailAlreadyExistsException();
         }
 
@@ -44,21 +46,27 @@ public class CompanyService {
 
     @Transactional(readOnly = true)
     public CompanyDetailsResponseDTO getCompanyById(UUID id) {
-        CompanyModel companyModel = companyRepository.findById(id).orElse(null);
-        assert companyModel != null;
+        CompanyModel companyModel = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException());
         if (companyModel.getAppointments() != null) {
             companyModel.getAppointments().size();
         }
         return companyMapper.toDetailsResponseDTO(companyModel);
     }
 
+    @Transactional
     void deleteCompany(UUID id) {
-        companyRepository.deleteById(id);
+        CompanyModel companyModel = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException());
+
+        try{
+            companyRepository.delete(companyModel);
+        } catch (Exception exception){
+            throw new CompanyDeleteException();
+        }
     }
 
+    @Transactional
     public CompanyResponseDTO updateCompany(UUID companyId, UpdateCompanyDTO updateDTO) {
-        CompanyModel existingCompany = companyRepository.findById(companyId)
-                .orElseThrow(() -> new RuntimeException("Company not found"));
+        CompanyModel existingCompany = companyRepository.findById(companyId).orElseThrow(() -> new CompanyNotFoundException());
         CompanyModel updatedCompany = companyMapper.toUpdateCompany(updateDTO, existingCompany);
         updatedCompany = companyRepository.save(updatedCompany);
         return companyMapper.toResponseDTO(updatedCompany);
