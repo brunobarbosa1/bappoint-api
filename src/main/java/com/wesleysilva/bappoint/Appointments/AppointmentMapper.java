@@ -1,6 +1,7 @@
 package com.wesleysilva.bappoint.Appointments;
 
-import com.wesleysilva.bappoint.Appointments.dto.AppointmentResponseDTO;
+import com.wesleysilva.bappoint.Appointments.dto.AppointmentAllDetailsDTO;
+import com.wesleysilva.bappoint.Appointments.dto.AppointmentReponseDTO;
 import com.wesleysilva.bappoint.Appointments.dto.CreateAppointmentDTO;
 import com.wesleysilva.bappoint.Appointments.dto.UpdateAppointmentDTO;
 import com.wesleysilva.bappoint.Services.ServiceModel;
@@ -10,8 +11,8 @@ import java.util.Optional;
 
 @Component
 public class AppointmentMapper {
-    public AppointmentResponseDTO toResponseDTO(AppointmentModel appointment) {
-        AppointmentResponseDTO AppointmentDto = new AppointmentResponseDTO();
+    public AppointmentAllDetailsDTO toResponseAllDetailsDTO(AppointmentModel appointment) {
+        AppointmentAllDetailsDTO AppointmentDto = new AppointmentAllDetailsDTO();
         AppointmentDto.setId(appointment.getId());
         AppointmentDto.setCostumerName(appointment.getCostumerName());
         AppointmentDto.setCostumerEmail(appointment.getCostumerEmail());
@@ -74,4 +75,27 @@ public class AppointmentMapper {
 
         return AppointmentDto;
     }
+
+    public AppointmentReponseDTO toResponseDTO(AppointmentModel appointment) {
+        AppointmentReponseDTO AppointmentDto = new AppointmentReponseDTO();
+
+        AppointmentDto.setCostumerName(appointment.getCostumerName());
+        AppointmentDto.setCostumerEmail(appointment.getCostumerEmail());
+        AppointmentDto.setCostumerPhone(appointment.getCostumerPhone());
+        AppointmentDto.setAppointmentDate(appointment.getAppointmentDate());
+        AppointmentDto.setStartTime(appointment.getStartTime());
+        AppointmentDto.setEndTime(appointment.getEndTime());
+        AppointmentDto.setTotalAmount(appointment.getTotalAmount());
+        AppointmentDto.setAppointmentStatus(appointment.getAppointmentStatus());
+
+        AppointmentDto.setServiceIds(Optional.ofNullable(appointment.getServices())
+                .map(services -> services.stream()
+                        .map(ServiceModel::getId)
+                        .toList())
+                .orElse(List.of()));
+
+        return AppointmentDto;
+    }
+
+
 }
