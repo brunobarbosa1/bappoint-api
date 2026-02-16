@@ -1,5 +1,8 @@
 package com.wesleysilva.bappoint.Appointments;
 
+import com.wesleysilva.bappoint.Appointments.dto.AppointmentResponseDTO;
+import com.wesleysilva.bappoint.Appointments.dto.CreateAppointmentDTO;
+import com.wesleysilva.bappoint.Appointments.dto.UpdateAppointmentDTO;
 import com.wesleysilva.bappoint.Availability.SlotTimesDTO;
 import com.wesleysilva.bappoint.Availability.SlotsTimesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -100,8 +103,8 @@ public class AppointmentController {
             ),
             @ApiResponse(responseCode = "500", description = "Server error")
     })
-    public ResponseEntity<List<AppointmentDTO>> listAppointments() {
-        List<AppointmentDTO> appointments = appointmentService.listAppointments();
+    public ResponseEntity<List<AppointmentResponseDTO>> listAppointments() {
+        List<AppointmentResponseDTO> appointments = appointmentService.listAppointments();
 
         return ResponseEntity.status(HttpStatus.OK).body(appointments);
     }
@@ -142,8 +145,8 @@ public class AppointmentController {
             @ApiResponse(responseCode = "500", description = "Server error"),
             @ApiResponse(responseCode = "404", description = "Appointment not found")
     })
-    public ResponseEntity<AppointmentDTO> listAppointmentById(@PathVariable UUID appointmentId) {
-        AppointmentDTO appointment = appointmentService.getAppointmentById(appointmentId);
+    public ResponseEntity<AppointmentResponseDTO> listAppointmentById(@PathVariable UUID appointmentId) {
+        AppointmentResponseDTO appointment = appointmentService.getAppointmentById(appointmentId);
         return ResponseEntity.ok(appointment);
     }
 
@@ -186,11 +189,11 @@ public class AppointmentController {
             @ApiResponse(responseCode = "400", description = "Invalid data"),
             @ApiResponse(responseCode = "409", description = "Time slot conflict")
     })
-    public ResponseEntity<AppointmentDTO> createAppointment(@PathVariable UUID companyId, @RequestBody AppointmentDTO appointmentDTO) {
+    public ResponseEntity<CreateAppointmentDTO> createAppointment(@PathVariable UUID companyId, @RequestBody CreateAppointmentDTO appointmentDTO) {
 
         AppointmentModel appointment = appointmentService.createAppointment(appointmentDTO, companyId);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(appointmentMapper.toResponseDTO(appointment));
+        return ResponseEntity.status(HttpStatus.CREATED).body(appointmentMapper.toCreateAppointmentDTO(appointment));
     }
 
 
@@ -231,8 +234,8 @@ public class AppointmentController {
             @ApiResponse(responseCode = "404", description = "ID not found"),
             @ApiResponse(responseCode = "409", description = "Time slot conflict")
     })
-    public ResponseEntity<?> updateAppointment(@RequestBody AppointmentDTO appointmentResponseDTO, @PathVariable UUID appointmentId) {
-        AppointmentDTO appointment = appointmentService.updateAppointment(appointmentId, appointmentResponseDTO);
+    public ResponseEntity<?> updateAppointment(@RequestBody UpdateAppointmentDTO appointmentResponseDTO, @PathVariable UUID appointmentId) {
+        UpdateAppointmentDTO appointment = appointmentService.updateAppointment(appointmentId, appointmentResponseDTO);
 
         if (appointment != null) {
             return ResponseEntity.ok(appointment);
