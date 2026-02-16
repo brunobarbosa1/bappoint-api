@@ -8,6 +8,8 @@ import com.wesleysilva.bappoint.Services.ServiceModel;
 import com.wesleysilva.bappoint.Services.ServiceRepository;
 import com.wesleysilva.bappoint.Settings.SettingsDTO;
 import com.wesleysilva.bappoint.Settings.SettingsService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,8 +94,8 @@ public class AppointmentService {
     }
 
 
-    public List<AppointmentResponseDTO> listAppointments() {
-        List<AppointmentModel> appointments = appointmentRepository.findAll();
+    public List<AppointmentResponseDTO> listAppointments(int page, int itemsPerPage) {
+        Page<AppointmentModel> appointments = appointmentRepository.findAll(PageRequest.of(page, itemsPerPage) );
         return appointments.stream()
                 .map(appointmentMapper::toResponseDTO)
                 .collect(Collectors.toList());
