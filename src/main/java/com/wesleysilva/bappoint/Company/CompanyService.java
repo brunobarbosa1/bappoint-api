@@ -54,8 +54,8 @@ public class CompanyService {
     }
 
     @Transactional
-    void deleteCompany(UUID id) {
-        CompanyModel companyModel = companyRepository.findById(id).orElseThrow(() -> new CompanyNotFoundException());
+    void deleteCompany(UUID companyId) {
+        CompanyModel companyModel = companyRepository.findById(companyId).orElseThrow(() -> new CompanyNotFoundException());
 
         try{
             companyRepository.delete(companyModel);
