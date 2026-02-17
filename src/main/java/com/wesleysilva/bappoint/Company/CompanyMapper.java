@@ -5,6 +5,7 @@ import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
+import com.wesleysilva.bappoint.Settings.SettingsDTO;
 import com.wesleysilva.bappoint.Settings.SettingsMapper;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import org.springframework.stereotype.Component;
@@ -21,19 +22,20 @@ public class CompanyMapper {
         this.appointmentMapper = appointmentMapper;
     }
 
-    public CompanyModel toCreate(CreateCompanyDTO createCompanyDTO) {
-        CompanyModel companyModel = new CompanyModel();
-        companyModel.setName(createCompanyDTO.getName());
-        companyModel.setEmail(createCompanyDTO.getEmail());
-        companyModel.setPhone(createCompanyDTO.getPhone());
-        companyModel.setAddress(createCompanyDTO.getAddress());
+    public CreateCompanyDTO toCreate(CompanyModel companyModel) {
+        CreateCompanyDTO companyDto = new CreateCompanyDTO();
 
-        if (createCompanyDTO.getSettings() != null) {
-            SettingsModel settingsModel = settingsMapper.map(createCompanyDTO.getSettings());
-            companyModel.setSettings(settingsModel);
+        companyDto.setId(companyModel.getId());
+        companyDto.setName(companyModel.getName());
+        companyDto.setEmail(companyModel.getEmail());
+        companyDto.setPhone(companyModel.getPhone());
+        companyDto.setAddress(companyModel.getAddress());
+
+        if (companyModel.getSettings() != null) {
+            companyDto.setSettings(settingsMapper.map(companyModel.getSettings()));
         }
 
-        return companyModel;
+        return companyDto;
     }
 
     public CompanyResponseDTO toResponseDTO(CompanyModel companyModel) {

@@ -40,8 +40,8 @@ public class CompanyController {
                     @ApiResponse(responseCode = "400", description = "Invalid company data provided")
             }
     )
-    public ResponseEntity<CompanyResponseDTO> createCompany(@Valid @RequestBody CreateCompanyDTO company) {
-        CompanyResponseDTO newCompany = companyService.createCompany(company);
+    public ResponseEntity<CreateCompanyDTO> createCompany(@Valid @RequestBody CreateCompanyDTO company) {
+        CreateCompanyDTO newCompany = companyService.createCompany(company);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCompany);
     }
 

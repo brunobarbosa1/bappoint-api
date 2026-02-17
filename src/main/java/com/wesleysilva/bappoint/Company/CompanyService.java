@@ -4,6 +4,7 @@ import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
+import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.exceptions.CompanyDeleteException;
 import com.wesleysilva.bappoint.exceptions.CompanyNotFoundException;
 import com.wesleysilva.bappoint.exceptions.EmailAlreadyExistsException;
@@ -25,15 +26,28 @@ public class CompanyService {
     }
 
 
-    public CompanyResponseDTO createCompany(CreateCompanyDTO createCompanyDTO) {
-        if (companyRepository.existsByEmail(createCompanyDTO.getEmail())) {
+    @Transactional
+    public CreateCompanyDTO createCompany(CreateCompanyDTO dto) {
+        if (companyRepository.existsByEmail(dto.getEmail())) {
             throw new EmailAlreadyExistsException();
         }
 
-        CompanyModel companyModel = companyMapper.toCreate(createCompanyDTO);
-        companyModel = companyRepository.save(companyModel);
+        CompanyModel company = new CompanyModel();
+        company.setName(dto.getName());
+        company.setEmail(dto.getEmail());
+        company.setPhone(dto.getPhone());
+        company.setAddress(dto.getAddress());
 
-        return companyMapper.toResponseDTO(companyModel);
+        if (dto.getSettings() != null) {
+            SettingsModel settings = new SettingsModel();
+            settings.setAppointment_interval(dto.getSettings().getAppointment_interval());
+            settings.setMax_cancellation_interval(dto.getSettings().getMax_cancellation_interval());
+            company.setSettings(settings);
+        }
+
+        CompanyModel saved = companyRepository.save(company);
+
+        return companyMapper.toCreate(saved);
     }
 
     @Transactional(readOnly = true)
