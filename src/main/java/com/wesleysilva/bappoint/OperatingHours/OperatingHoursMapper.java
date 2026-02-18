@@ -1,19 +1,19 @@
 package com.wesleysilva.bappoint.OperatingHours;
 
+import com.wesleysilva.bappoint.OperatingHours.dto.CreateOperatingHoursDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OperatingHoursMapper {
-    public OperatingHoursModel toEntity(OperatingHoursDTO operatingHoursDTO) {
+    public OperatingHoursModel toEntity(CreateOperatingHoursDTO operatingHoursDTO) {
         OperatingHoursModel operatingHoursModel = new OperatingHoursModel();
 
-        operatingHoursModel.setId(operatingHoursDTO.getId());
-        operatingHoursModel.setStart_time(operatingHoursDTO.getStart_time());
-        operatingHoursModel.setEnd_time(operatingHoursDTO.getEnd_time());
-        operatingHoursModel.setLunch_start_time(operatingHoursDTO.getLunch_start_time());
-        operatingHoursModel.setLunch_end_time(operatingHoursDTO.getLunch_end_time());
+        operatingHoursModel.setStartTime(operatingHoursDTO.getStartTime());
+        operatingHoursModel.setEndTime(operatingHoursDTO.getEndTime());
+        operatingHoursModel.setLunchStartTime(operatingHoursDTO.getLunchStartTime());
+        operatingHoursModel.setLunchEndTime(operatingHoursDTO.getLunchEndTime());
         operatingHoursModel.setWeekday(operatingHoursDTO.getWeekday());
-        operatingHoursModel.setIs_active(operatingHoursDTO.getIs_active());
+        operatingHoursModel.setIsActive(operatingHoursDTO.getIsActive());
 
         return operatingHoursModel;
     }
@@ -22,12 +22,26 @@ public class OperatingHoursMapper {
         OperatingHoursDTO operatingHoursDTO = new OperatingHoursDTO();
 
         operatingHoursDTO.setId(operatingHoursModel.getId());
-        operatingHoursDTO.setStart_time(operatingHoursModel.getStart_time());
-        operatingHoursDTO.setEnd_time(operatingHoursModel.getEnd_time());
-        operatingHoursDTO.setLunch_start_time(operatingHoursModel.getLunch_start_time());
-        operatingHoursDTO.setLunch_end_time(operatingHoursModel.getLunch_end_time());
+        operatingHoursDTO.setStart_time(operatingHoursModel.getStartTime());
+        operatingHoursDTO.setEnd_time(operatingHoursModel.getEndTime());
+        operatingHoursDTO.setLunch_start_time(operatingHoursModel.getLunchStartTime());
+        operatingHoursDTO.setLunch_end_time(operatingHoursModel.getLunchEndTime());
         operatingHoursDTO.setWeekday(operatingHoursModel.getWeekday());
-        operatingHoursDTO.setIs_active(operatingHoursModel.getIs_active());
+        operatingHoursDTO.setIs_active(operatingHoursModel.getIsActive());
+
+        return operatingHoursDTO;
+    }
+
+    public CreateOperatingHoursDTO toCreate(OperatingHoursModel operatingHoursModel) {
+        CreateOperatingHoursDTO operatingHoursDTO = new CreateOperatingHoursDTO();
+
+        operatingHoursDTO.setId(operatingHoursModel.getId());
+        operatingHoursDTO.setStartTime(operatingHoursModel.getStartTime());
+        operatingHoursDTO.setEndTime(operatingHoursModel.getEndTime());
+        operatingHoursDTO.setLunchStartTime(operatingHoursModel.getLunchStartTime());
+        operatingHoursDTO.setLunchEndTime(operatingHoursModel.getLunchEndTime());
+        operatingHoursDTO.setWeekday(operatingHoursModel.getWeekday());
+        operatingHoursDTO.setIsActive(operatingHoursModel.getIsActive());
 
         return operatingHoursDTO;
     }
