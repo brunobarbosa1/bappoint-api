@@ -1,11 +1,18 @@
 package com.wesleysilva.bappoint.OperatingHours;
 
+import com.wesleysilva.bappoint.Company.CompanyModel;
+import com.wesleysilva.bappoint.Company.CompanyRepository;
+import com.wesleysilva.bappoint.OperatingHours.dto.CreateOperatingHoursDTO;
 import com.wesleysilva.bappoint.Services.ServiceDTO;
 import com.wesleysilva.bappoint.Services.ServiceModel;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.Settings.SettingsRepository;
 import com.wesleysilva.bappoint.enums.WeekDay;
+import com.wesleysilva.bappoint.exceptions.CompanyNotFoundException;
+import com.wesleysilva.bappoint.exceptions.ExistsWeekDayException;
+import com.wesleysilva.bappoint.exceptions.SettingsNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -20,25 +27,40 @@ public class OperatingHoursService {
     private final OperatingHoursRepository operatingHoursRepository;
     private final OperatingHoursMapper operatingHoursMapper;
     private final SettingsRepository settingsRepository;
+    private final CompanyRepository companyRepository;
 
-    public OperatingHoursService(OperatingHoursRepository operatingHoursRepository, OperatingHoursMapper operatingHoursMapper, SettingsRepository settingsRepository) {
+    public OperatingHoursService(OperatingHoursRepository operatingHoursRepository, OperatingHoursMapper operatingHoursMapper, SettingsRepository settingsRepository, CompanyRepository companyRepository) {
         this.operatingHoursRepository = operatingHoursRepository;
         this.operatingHoursMapper = operatingHoursMapper;
         this.settingsRepository = settingsRepository;
+        this.companyRepository = companyRepository;
     }
 
-    public OperatingHoursDTO createOperatingHours(UUID settingsId, OperatingHoursDTO operatingHoursDTO) {
+    @Transactional
+    public CreateOperatingHoursDTO createOperatingHours(UUID companyId, CreateOperatingHoursDTO operatingHoursDTO) {
         OperatingHoursModel operatingHoursModel = operatingHoursMapper.toEntity(operatingHoursDTO);
 
-        SettingsModel settings = settingsRepository
-                .findById(settingsId)
-                .orElseThrow(() -> new RuntimeException("Settings not found"));
+        CompanyModel companyModel = companyRepository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
+
+        SettingsModel settings = companyModel.getSettings();
+
+        if (settings == null) {
+            throw new SettingsNotFoundException();
+        }
+
+        boolean exists = operatingHoursRepository
+                .findBySettingsAndWeekday(companyModel.getSettings(), operatingHoursDTO.getWeekday())
+                .isPresent();
+
+        if(exists) {
+            throw new ExistsWeekDayException();
+        }
 
         operatingHoursModel.setSettings(settings);
 
         operatingHoursModel = operatingHoursRepository.save(operatingHoursModel);
 
-        return operatingHoursMapper.toDto(operatingHoursModel);
+        return operatingHoursMapper.toCreate(operatingHoursModel);
     }
 
     public List<OperatingHoursDTO> getAllOperatingHours() {
@@ -66,9 +88,9 @@ public class OperatingHoursService {
             OperatingHoursModel operatingHoursToUpdate = existingOperatingHours.get();
 
             operatingHoursToUpdate.setWeekday(operatingHoursDTO.getWeekday());
-            operatingHoursToUpdate.setStart_time(operatingHoursDTO.getStart_time());
-            operatingHoursToUpdate.setEnd_time(operatingHoursDTO.getEnd_time());
-            operatingHoursToUpdate.setIs_active(operatingHoursDTO.getIs_active());
+            operatingHoursToUpdate.setStartTime(operatingHoursDTO.getStart_time());
+            operatingHoursToUpdate.setEndTime(operatingHoursDTO.getEnd_time());
+            operatingHoursToUpdate.setIsActive(operatingHoursDTO.getIs_active());
 
             OperatingHoursModel savedOperatingHours = operatingHoursRepository.save(operatingHoursToUpdate);
             return operatingHoursMapper.toDto(savedOperatingHours);
