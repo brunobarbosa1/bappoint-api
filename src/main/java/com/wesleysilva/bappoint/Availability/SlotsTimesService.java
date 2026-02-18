@@ -68,11 +68,11 @@ public class SlotsTimesService {
     }
 
     private List<SlotTimesDTO> generateSlots(OperatingHoursModel operatingHours, LocalDate date, int intervalMinutes) {
-        LocalDateTime from = date.atTime(operatingHours.getStart_time());
-        LocalDateTime to = date.atTime(operatingHours.getEnd_time());
+        LocalDateTime from = date.atTime(operatingHours.getStartTime());
+        LocalDateTime to = date.atTime(operatingHours.getEndTime());
 
-        LocalTime lunchStart = operatingHours.getLunch_start_time();
-        LocalTime lunchEnd = operatingHours.getLunch_end_time();
+        LocalTime lunchStart = operatingHours.getLunchStartTime();
+        LocalTime lunchEnd = operatingHours.getLunchEndTime();
 
         List<SlotTimesDTO> slots = new ArrayList<>();
         LocalDateTime current = from;
