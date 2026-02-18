@@ -3,12 +3,15 @@ package com.wesleysilva.bappoint.OffDay;
 import com.wesleysilva.bappoint.Company.CompanyModel;
 import com.wesleysilva.bappoint.Company.CompanyRepository;
 import com.wesleysilva.bappoint.OffDay.dto.CreateOffDayDTO;
+import com.wesleysilva.bappoint.OffDay.dto.OffDayUpdateDTO;
+import com.wesleysilva.bappoint.OffDay.dto.OffDaysAllDetailsDTO;
 import com.wesleysilva.bappoint.OffDay.dto.OffDaysResponseDTO;
 import com.wesleysilva.bappoint.OperatingHours.OperatingHoursDTO;
 import com.wesleysilva.bappoint.OperatingHours.OperatingHoursModel;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.Settings.SettingsRepository;
 import com.wesleysilva.bappoint.exceptions.CompanyNotFoundException;
+import com.wesleysilva.bappoint.exceptions.OffDayNotFoundException;
 import com.wesleysilva.bappoint.exceptions.SettingsNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +37,7 @@ public class OffDaysService {
     }
 
     @Transactional
-    public CreateOffDayDTO createOffDays(UUID companyId, OffDaysDTO offDaysDTO) {
+    public CreateOffDayDTO createOffDays(UUID companyId, CreateOffDayDTO offDaysDTO) {
         OffDaysModel offDaysModel = offDaysMapper.toEntity(offDaysDTO);
 
         CompanyModel company = companyRepository.findById(companyId).orElseThrow(CompanyNotFoundException::new);
@@ -60,30 +63,28 @@ public class OffDaysService {
                 .collect(Collectors.toList());
     }
 
-    public OffDaysDTO getOffDaysById(UUID offDaysId) {
-        OffDaysModel offDayById = offDaysRepository.findById(offDaysId).orElseThrow(()  -> new RuntimeException("OffDays not found"));
-        return offDaysMapper.toDto(offDayById);
+    @Transactional(readOnly = true)
+    public OffDaysAllDetailsDTO getOffDaysById(UUID offDaysId) {
+        OffDaysModel offDayById = offDaysRepository.findById(offDaysId)
+                .orElseThrow(OffDayNotFoundException::new);
+        return offDaysMapper.toResponseAllDetails(offDayById);
     }
 
     void deleteOffDaysById(UUID offDaysId) {
-        offDaysRepository.deleteById(offDaysId);
+        OffDaysModel offDay = offDaysRepository.findById(offDaysId)
+                        .orElseThrow(OffDayNotFoundException::new);
+
+        offDaysRepository.delete(offDay);
     }
 
-    public OffDaysDTO updateService(UUID offDaysID, OffDaysDTO offDaysDTO) {
-        Optional<OffDaysModel> existingOffDays = offDaysRepository.findById(offDaysID);
-
-        if (existingOffDays.isPresent()) {
-            OffDaysModel offDaysToUpdate = existingOffDays.get();
-
-            offDaysToUpdate.setOffDaystype(offDaysDTO.getOffDaysType());
-            offDaysToUpdate.setReason(offDaysDTO.getReason());
-            offDaysToUpdate.setDate(offDaysDTO.getDate());
-            offDaysToUpdate.setOffDaystype(offDaysDTO.getOffDaysType());
-
-            OffDaysModel savedOffDays = offDaysRepository.save(offDaysToUpdate);
-            return offDaysMapper.toDto(savedOffDays);
-        }
-
-        return null;
+    public OffDayUpdateDTO updateService(UUID offDaysID, OffDayUpdateDTO offDaysDTO) {
+        return offDaysRepository.findById(offDaysID)
+                .map(offDaysToUpdate -> {
+                    offDaysToUpdate.setOffDaystype(offDaysDTO.getOffDaysType());
+                    offDaysToUpdate.setReason(offDaysDTO.getReason());
+                    offDaysToUpdate.setDate(offDaysDTO.getDate());
+                    return offDaysMapper.toUpdate(offDaysRepository.save(offDaysToUpdate));
+                })
+                .orElseThrow(OffDayNotFoundException::new);
     }
 }
