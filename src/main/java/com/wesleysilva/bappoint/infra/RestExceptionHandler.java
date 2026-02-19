@@ -62,7 +62,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SettingsNotFoundException.class)
     private ResponseEntity<RestErrorMessage> settingsNotFoundException(SettingsNotFoundException exception) {
-        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, "Failed to update appointment.");
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND, "Settings not found.");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
     }
 
@@ -72,5 +72,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
     }
 
+    @ExceptionHandler(ExistsWeekDayException.class)
+    private ResponseEntity<RestErrorMessage> existsWeekDayException(ExistsWeekDayException exception) {
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.CONFLICT, "Weekday already registered.");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(threatResponse);
+    }
 
 }

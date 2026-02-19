@@ -1,4 +1,7 @@
 package com.wesleysilva.bappoint.exceptions;
 
-public class ExistsWeekDayException {
+public class ExistsWeekDayException extends RuntimeException {
+    public ExistsWeekDayException() {
+        super("Weekday already registered.");
+    }
 }
