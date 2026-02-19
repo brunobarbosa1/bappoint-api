@@ -3,13 +3,15 @@ package com.wesleysilva.bappoint.OperatingHours;
 import com.wesleysilva.bappoint.Company.CompanyModel;
 import com.wesleysilva.bappoint.Company.CompanyRepository;
 import com.wesleysilva.bappoint.OperatingHours.dto.CreateOperatingHoursDTO;
-import com.wesleysilva.bappoint.Services.ServiceDTO;
-import com.wesleysilva.bappoint.Services.ServiceModel;
+import com.wesleysilva.bappoint.OperatingHours.dto.OperatingHoursAllDetailsDTO;
+import com.wesleysilva.bappoint.OperatingHours.dto.OperatingHoursResponseDTO;
+import com.wesleysilva.bappoint.OperatingHours.dto.UpdateOperatingHoursDTO;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.Settings.SettingsRepository;
 import com.wesleysilva.bappoint.enums.WeekDay;
 import com.wesleysilva.bappoint.exceptions.CompanyNotFoundException;
 import com.wesleysilva.bappoint.exceptions.ExistsWeekDayException;
+import com.wesleysilva.bappoint.exceptions.OperatingHoursNotFoundException;
 import com.wesleysilva.bappoint.exceptions.SettingsNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,56 +65,43 @@ public class OperatingHoursService {
         return operatingHoursMapper.toCreate(operatingHoursModel);
     }
 
-    public List<OperatingHoursDTO> getAllOperatingHours() {
+    public List<OperatingHoursResponseDTO> getAllOperatingHours() {
         List<OperatingHoursModel> operatingHoursModels = operatingHoursRepository.findAll();
         return operatingHoursModels.stream()
-                .map(operatingHoursMapper::toDto)
+                .map(operatingHoursMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
-    public OperatingHoursDTO getOperatingHoursById(UUID operatingHoursId) {
+    public OperatingHoursAllDetailsDTO getOperatingHoursById(UUID operatingHoursId) {
         OperatingHoursModel operatingHours = operatingHoursRepository.findById(operatingHoursId)
-                .orElseThrow(() -> new RuntimeException("Company or settings not found"));
-
-        return operatingHoursMapper.toDto(operatingHours);
+                .orElseThrow(OperatingHoursNotFoundException::new);
+        return operatingHoursMapper.toResponseAllDetails(operatingHours);
     }
 
     public void deleteOperatingHoursById(UUID operatingHoursId) {
-        operatingHoursRepository.deleteById(operatingHoursId);
+        OperatingHoursModel operatingHoursModel = operatingHoursRepository.findById(operatingHoursId)
+                        .orElseThrow(OperatingHoursNotFoundException::new);
+        try{
+        operatingHoursRepository.delete(operatingHoursModel);
+        } catch(Exception e){
+            throw new OperatingHoursNotFoundException();
+        }
     }
 
-    public OperatingHoursDTO updateService(UUID operatingHoursID, OperatingHoursDTO operatingHoursDTO) {
-        Optional<OperatingHoursModel> existingOperatingHours = operatingHoursRepository.findById(operatingHoursID);
+    public UpdateOperatingHoursDTO updateService(UUID operatingHoursID, UpdateOperatingHoursDTO operatingHoursDTO) {
+        Optional<OperatingHoursModel> existingOperatingHours = Optional.of(operatingHoursRepository.findById(operatingHoursID)
+                .orElseThrow(OperatingHoursNotFoundException::new));
 
-        if (existingOperatingHours.isPresent()) {
-            OperatingHoursModel operatingHoursToUpdate = existingOperatingHours.get();
+        OperatingHoursModel operatingHoursToUpdate = existingOperatingHours.get();
 
-            operatingHoursToUpdate.setWeekday(operatingHoursDTO.getWeekday());
-            operatingHoursToUpdate.setStartTime(operatingHoursDTO.getStart_time());
-            operatingHoursToUpdate.setEndTime(operatingHoursDTO.getEnd_time());
-            operatingHoursToUpdate.setIsActive(operatingHoursDTO.getIs_active());
+        operatingHoursToUpdate.setWeekday(operatingHoursDTO.getWeekday());
+        operatingHoursToUpdate.setStartTime(operatingHoursDTO.getStartTime());
+        operatingHoursToUpdate.setEndTime(operatingHoursDTO.getEndTime());
+        operatingHoursToUpdate.setIsActive(operatingHoursDTO.getIsActive());
 
-            OperatingHoursModel savedOperatingHours = operatingHoursRepository.save(operatingHoursToUpdate);
-            return operatingHoursMapper.toDto(savedOperatingHours);
-        }
+        OperatingHoursModel savedOperatingHours = operatingHoursRepository.save(operatingHoursToUpdate);
+        return operatingHoursMapper.toUpdate(savedOperatingHours);
 
-        return null;
-    }
-
-    public OperatingHoursDTO findByDate(String dateStr) {
-        LocalDate date = LocalDate.parse(dateStr);
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        WeekDay weekday = WeekDay.valueOf(dayOfWeek.name());
-
-        List<OperatingHoursModel> hours = operatingHoursRepository.findByWeekday(weekday);
-
-        if (hours.isEmpty()) {
-            return null;
-        }
-
-        OperatingHoursModel operatingHours = hours.getFirst();
-
-        return operatingHoursMapper.toDto(operatingHours);
     }
 
 }
