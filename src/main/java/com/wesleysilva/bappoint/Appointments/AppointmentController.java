@@ -22,17 +22,15 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("company/{companyId}/appointments")
+@RequestMapping("companies/{companyId}/appointments")
 @Tag(name = "dev/Appointments", description = "Manage appointment scheduling")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
-    private final AppointmentMapper appointmentMapper;
     private final SlotsTimesService slotsTimesService;
 
-    public AppointmentController(AppointmentService appointmentService, AppointmentMapper appointmentMapper, SlotsTimesService slotsTimesService) {
+    public AppointmentController(AppointmentService appointmentService, SlotsTimesService slotsTimesService) {
         this.appointmentService = appointmentService;
-        this.appointmentMapper = appointmentMapper;
         this.slotsTimesService = slotsTimesService;
     }
 
