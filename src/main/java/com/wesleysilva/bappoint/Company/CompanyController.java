@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/companies")
 @Tag(name = "Company", description = "Endpoints for managing company details (create, list, update, and delete).")
 public class CompanyController {
 
