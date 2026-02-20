@@ -2,10 +2,15 @@ package com.wesleysilva.bappoint.Services;
 
 import com.wesleysilva.bappoint.Company.CompanyModel;
 import com.wesleysilva.bappoint.Company.CompanyRepository;
+import com.wesleysilva.bappoint.Services.dto.CreateServiceDTO;
+import com.wesleysilva.bappoint.Services.dto.ServiceAllDetailsDTO;
+import com.wesleysilva.bappoint.Services.dto.ServiceResponseDTO;
+import com.wesleysilva.bappoint.Services.dto.UpdateServiceDTO;
 import com.wesleysilva.bappoint.Settings.SettingsModel;
 import com.wesleysilva.bappoint.Settings.SettingsRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,59 +35,42 @@ public class ServicesController {
 
     @PostMapping("/create")
     @Operation(summary = "Create service for company", description = "")
-    public ResponseEntity<ServiceDTO> createService(
+    public ResponseEntity<CreateServiceDTO> createService(
             @PathVariable UUID companyId,
-            @RequestBody ServiceDTO service) {
+           @Valid @RequestBody CreateServiceDTO service) {
 
-        SettingsModel settings = companyRepository.findById(companyId)
-                .map(CompanyModel::getSettings)
-                .orElseThrow(() -> new RuntimeException("Company or settings not found"));
-
-        ServiceDTO newService = serviceService.createService(settings.getId(), service);
+        CreateServiceDTO newService = serviceService.createService(service, companyId);
         return ResponseEntity.status(HttpStatus.CREATED).body(newService);
     }
 
     @GetMapping("/list")
     @Operation(summary = "List services for company", description = "")
-    public ResponseEntity<List<ServiceDTO>> listServices() {
-        List<ServiceDTO> serviceDTOS = serviceService.listAllServices();
+    public ResponseEntity<List<ServiceResponseDTO>> listServices() {
+        List<ServiceResponseDTO> serviceDTOS = serviceService.listAllServices();
         return ResponseEntity.ok(serviceDTOS);
     }
 
     @GetMapping("/{serviceId}")
     @Operation(summary = "Get service by ID", description = "")
-    public ResponseEntity<ServiceDTO> getServiceById(@PathVariable UUID serviceId) {
-        ServiceDTO service = serviceService.getServiceById(serviceId);
-        if (service != null) {
+    public ResponseEntity<ServiceAllDetailsDTO> getServiceById(@PathVariable UUID serviceId) {
+        ServiceAllDetailsDTO service = serviceService.getServiceById(serviceId);
             return ResponseEntity.status(HttpStatus.OK).body(service);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
     }
 
     @DeleteMapping("/delete/{serviceId}")
     @Operation(summary = "Delete service", description = "")
     public ResponseEntity<String> deleteService(@PathVariable UUID serviceId) {
-        ServiceDTO service = serviceService.getServiceById(serviceId);
-        if (service != null) {
             serviceService.deleteService(serviceId);
-            return ResponseEntity.ok("Service id: " + serviceId + " deleted successfully.");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Service not found");
-        }
+            return ResponseEntity.status(HttpStatus.OK).body("Service deleted");
     }
 
     @PutMapping("/update/{serviceId}")
     @Operation(summary = "Update service", description = "")
-    public ResponseEntity<ServiceDTO> updateService(
+    public ResponseEntity<UpdateServiceDTO> updateService(
             @PathVariable UUID serviceId,
-            @RequestBody ServiceDTO service) {
+            @Valid @RequestBody CreateServiceDTO service) {
 
-        ServiceDTO updatedService = serviceService.updateService(serviceId, service);
-        if (updatedService != null) {
+        UpdateServiceDTO updatedService = serviceService.updateService(serviceId, service);
             return ResponseEntity.status(HttpStatus.OK).body(updatedService);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
     }
 }
