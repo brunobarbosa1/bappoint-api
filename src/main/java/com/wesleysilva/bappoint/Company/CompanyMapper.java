@@ -25,14 +25,13 @@ public class CompanyMapper {
     public CreateCompanyDTO toCreate(CompanyModel companyModel) {
         CreateCompanyDTO companyDto = new CreateCompanyDTO();
 
-        companyDto.setId(companyModel.getId());
         companyDto.setName(companyModel.getName());
         companyDto.setEmail(companyModel.getEmail());
         companyDto.setPhone(companyModel.getPhone());
         companyDto.setAddress(companyModel.getAddress());
 
         if (companyModel.getSettings() != null) {
-            companyDto.setSettings(settingsMapper.map(companyModel.getSettings()));
+            companyDto.setSettings(settingsMapper.toCreate(companyModel.getSettings()));
         }
 
         return companyDto;
@@ -40,13 +39,14 @@ public class CompanyMapper {
 
     public CompanyResponseDTO toResponseDTO(CompanyModel companyModel) {
         CompanyResponseDTO companyDTO = new CompanyResponseDTO();
+        companyDTO.setId(companyModel.getId());
         companyDTO.setName(companyModel.getName());
         companyDTO.setEmail(companyModel.getEmail());
         companyDTO.setPhone(companyModel.getPhone());
         companyDTO.setAddress(companyModel.getAddress());
 
         if (companyModel.getSettings() != null) {
-            companyDTO.setSettings(settingsMapper.map(companyModel.getSettings()));
+            companyDTO.setSettings(settingsMapper.toResponse(companyModel.getSettings()));
         }
 
         return companyDTO;
@@ -61,7 +61,7 @@ public class CompanyMapper {
         companyDTO.setAddress(companyModel.getAddress());
 
         if (companyModel.getSettings() != null) {
-            companyDTO.setSettings(settingsMapper.map(companyModel.getSettings()));
+            companyDTO.setSettings(settingsMapper.toResponseAllDetails(companyModel.getSettings()));
         }
 
         if (companyModel.getAppointments() != null) {
@@ -82,7 +82,10 @@ public class CompanyMapper {
         if (updateCompanyDTO.getAddress() != null) existingCompany.setAddress(updateCompanyDTO.getAddress());
 
         if (updateCompanyDTO.getSettings() != null) {
-            existingCompany.setSettings(settingsMapper.map(updateCompanyDTO.getSettings()));
+            settingsMapper.toUpdateFromDTO(
+                    updateCompanyDTO.getSettings(),
+                    existingCompany.getSettings()
+            );
         }
 
         return existingCompany;
