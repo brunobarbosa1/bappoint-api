@@ -1,6 +1,5 @@
 package com.wesleysilva.bappoint.Company.dto;
 
-import com.wesleysilva.bappoint.Settings.SettingsDTO;
 import com.wesleysilva.bappoint.Settings.dto.UpdateSettingsDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;

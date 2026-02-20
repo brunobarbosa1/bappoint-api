@@ -5,9 +5,7 @@ import com.wesleysilva.bappoint.Company.dto.CompanyDetailsResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CompanyResponseDTO;
 import com.wesleysilva.bappoint.Company.dto.CreateCompanyDTO;
 import com.wesleysilva.bappoint.Company.dto.UpdateCompanyDTO;
-import com.wesleysilva.bappoint.Settings.SettingsDTO;
 import com.wesleysilva.bappoint.Settings.SettingsMapper;
-import com.wesleysilva.bappoint.Settings.SettingsModel;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
