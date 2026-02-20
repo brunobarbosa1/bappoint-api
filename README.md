@@ -48,8 +48,8 @@ The project is organized by **domain**, not by technical layer:
 - [x] Services per company/settings
 - [x] Operating hours (weekly schedule)
 - [x] Off days (holidays / maintenance)
-- [ ] Authentication (JWT)
-- [ ] Appointments
+- [x] Authentication (JWT)
+- [x] Appointments
 - [ ] Users / Employees
 - [ ] Notifications
 
@@ -68,11 +68,11 @@ docker compose up -d
 ## Main Endpoints
 
 ```
-GET    /company/list
-POST   /company/create
-GET    /company/{companyId}/settings
-PUT    /company/{companyId}/settings/operating_hours
-POST   /company/{companyId}/settings/off-days
+GET    /companies/list
+POST   /companies/create
+GET    /companies/{companyId}/settings
+PUT    /companies/{companyId}/settings/operating_hours
+POST   /companies/{companyId}/settings/off-days
 ```
 
 ---
