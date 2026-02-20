@@ -1,11 +1,12 @@
 package com.wesleysilva.bappoint.Settings;
 
 import com.wesleysilva.bappoint.OffDay.OffDaysMapper;
-import com.wesleysilva.bappoint.OffDay.OffDaysModel;
 import com.wesleysilva.bappoint.OperatingHours.OperatingHoursMapper;
-import com.wesleysilva.bappoint.OperatingHours.OperatingHoursModel;
 import com.wesleysilva.bappoint.Services.ServiceMapper;
-import com.wesleysilva.bappoint.Services.ServiceModel;
+import com.wesleysilva.bappoint.Settings.dto.CreateSettingsDTO;
+import com.wesleysilva.bappoint.Settings.dto.SettingsAllDetailsDTO;
+import com.wesleysilva.bappoint.Settings.dto.SettingsResponseDTO;
+import com.wesleysilva.bappoint.Settings.dto.UpdateSettingsDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,72 +24,98 @@ public class SettingsMapper {
         this.offDaysMapper = offDaysMapper;
     }
 
-    public SettingsModel map(SettingsDTO settingsDTO) {
-        SettingsModel settingsModel = new SettingsModel();
-        settingsModel.setId(settingsDTO.getId());
-        settingsModel.setAppointment_interval(settingsDTO.getAppointment_interval());
-        settingsModel.setMax_cancellation_interval(settingsDTO.getMax_cancellation_interval());
-
-        if (settingsDTO.getServices() != null) {
-            List<ServiceModel> serviceModels = settingsDTO.getServices()
-                    .stream()
-                    .map(serviceMapper::toEntity)
-                    .peek(service -> service.setSettings(settingsModel))
-                    .collect(Collectors.toList());
-            settingsModel.setServices(serviceModels);
-        }
-
-        if (settingsDTO.getOperating_hours() != null) {
-            List<OperatingHoursModel> operatingHoursModels = settingsDTO.getOperating_hours()
-                    .stream()
-                    .map(operatingHoursMapper::toEntity)
-                    .peek(operatingHours -> operatingHours.setSettings(settingsModel))
-                    .collect(Collectors.toList());
-            settingsModel.setOperatingHours(operatingHoursModels);
-        }
-
-        if (settingsDTO.getOff_days() != null) {
-            List<OffDaysModel> offDaysModel = settingsDTO.getOff_days()
-                    .stream()
-                    .map(offDaysMapper::toEntity)
-                    .peek(offDays -> offDays.setSettings(settingsModel))
-                    .collect(Collectors.toList());
-            settingsModel.setOffDays(offDaysModel);
-        }
-
-        return settingsModel;
-    }
-
-    public SettingsDTO map(SettingsModel settingsModel) {
-        SettingsDTO settingsDTO = new SettingsDTO();
-        settingsDTO.setId(settingsModel.getId());
-        settingsDTO.setAppointment_interval(settingsModel.getAppointment_interval());
-        settingsDTO.setMax_cancellation_interval(settingsModel.getMax_cancellation_interval());
+    public CreateSettingsDTO toCreate(SettingsModel settingsModel) {
+        CreateSettingsDTO settingsDTO = new CreateSettingsDTO();
+        settingsDTO.setAppointmentInterval(settingsModel.getAppointmentInterval());
+        settingsDTO.setMaxCancellationInterval(settingsModel.getMaxCancellationInterval());
 
         if (settingsModel.getServices() != null) {
             settingsDTO.setServices(
                     settingsModel.getServices().stream()
-                            .map(serviceMapper::toDto)
+                            .map(serviceMapper::toCreate)
                             .collect(Collectors.toList())
             );
         }
 
         if (settingsModel.getOperatingHours() != null) {
-            settingsDTO.setOperating_hours(
+            settingsDTO.setOperatingHours(
                     settingsModel.getOperatingHours().stream()
-                            .map(operatingHoursMapper::toDto)
+                            .map(operatingHoursMapper::toCreate)
                             .collect(Collectors.toList())
             );
         }
 
         if (settingsModel.getOffDays() != null) {
-            settingsDTO.setOff_days(
+            settingsDTO.setOffDays(
                     settingsModel.getOffDays().stream()
-                            .map(offDaysMapper::toDto)
+                            .map(offDaysMapper::toCreate)
                             .collect(Collectors.toList())
             );
         }
 
         return settingsDTO;
     }
+
+    public SettingsResponseDTO toResponse(SettingsModel settingsModel) {
+        SettingsResponseDTO settingsResponseDTO = new SettingsResponseDTO();
+        settingsResponseDTO.setId(settingsModel.getId());
+        settingsResponseDTO.setAppointmentInterval(settingsModel.getAppointmentInterval());
+        settingsResponseDTO.setMaxCancellationInterval(settingsModel.getMaxCancellationInterval());
+
+        return settingsResponseDTO;
+    }
+
+    public SettingsAllDetailsDTO toResponseAllDetails(SettingsModel settingsModel) {
+        SettingsAllDetailsDTO settingsDTO = new SettingsAllDetailsDTO();
+
+        settingsDTO.setId(settingsModel.getId());
+        settingsDTO.setAppointmentInterval(settingsModel.getAppointmentInterval());
+        settingsDTO.setMaxCancellationInterval(settingsModel.getMaxCancellationInterval());
+
+        if (settingsModel.getServices() != null) {
+            settingsDTO.setServices(
+                    settingsModel.getServices().stream()
+                            .map(serviceMapper::toResponseAllDetails)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        if (settingsModel.getOperatingHours() != null) {
+            settingsDTO.setOperatingHours(
+                    settingsModel.getOperatingHours().stream()
+                            .map(operatingHoursMapper::toResponseAllDetails)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        if (settingsModel.getOffDays() != null) {
+            settingsDTO.setOffDays(
+                    settingsModel.getOffDays().stream()
+                            .map(offDaysMapper::toResponseAllDetails)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return settingsDTO;
+    }
+
+    public SettingsModel toUpdateFromDTO(UpdateSettingsDTO updateSettingsDTO, SettingsModel settingsModel) {
+        if (updateSettingsDTO.getAppointmentInterval() != null)
+            settingsModel.setAppointmentInterval(updateSettingsDTO.getAppointmentInterval());
+
+        if (updateSettingsDTO.getMaxCancellationInterval() != null)
+            settingsModel.setMaxCancellationInterval(updateSettingsDTO.getMaxCancellationInterval());
+
+        return settingsModel;
+    }
+
+    public UpdateSettingsDTO toUpdateSettings(SettingsModel settingsModel) {
+        UpdateSettingsDTO updateSettingsDTO = new UpdateSettingsDTO();
+
+        updateSettingsDTO.setAppointmentInterval(settingsModel.getAppointmentInterval());
+        updateSettingsDTO.setMaxCancellationInterval(settingsModel.getMaxCancellationInterval());
+
+        return updateSettingsDTO;
+    }
+
 }
