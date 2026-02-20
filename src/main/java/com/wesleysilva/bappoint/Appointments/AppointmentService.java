@@ -56,7 +56,7 @@ public class AppointmentService {
                 .toList();
 
         int totalDuration = services.stream()
-                .mapToInt(ServiceModel::getDuration_minutes)
+                .mapToInt(ServiceModel::getDurationMinutes)
                 .sum();
 
         LocalDateTime start = appointmentDTO.getStartTime();
