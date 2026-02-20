@@ -1,13 +1,9 @@
 package com.wesleysilva.bappoint.Services;
 
-import com.wesleysilva.bappoint.Company.CompanyModel;
-import com.wesleysilva.bappoint.Company.CompanyRepository;
 import com.wesleysilva.bappoint.Services.dto.CreateServiceDTO;
 import com.wesleysilva.bappoint.Services.dto.ServiceAllDetailsDTO;
 import com.wesleysilva.bappoint.Services.dto.ServiceResponseDTO;
 import com.wesleysilva.bappoint.Services.dto.UpdateServiceDTO;
-import com.wesleysilva.bappoint.Settings.SettingsModel;
-import com.wesleysilva.bappoint.Settings.SettingsRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,18 +15,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("company/{companyId}/services")
+@RequestMapping("companies/{companyId}/services")
 @Tag(name = "dev/Services", description = "Manage company services")
 public class ServicesController {
 
     private final ServiceService serviceService;
-    private final CompanyRepository companyRepository;
 
-    public ServicesController(ServiceService serviceService,
-                              CompanyRepository companyRepository,
-                              SettingsRepository settingsRepository) {
+    public ServicesController(ServiceService serviceService) {
         this.serviceService = serviceService;
-        this.companyRepository = companyRepository;
     }
 
     @PostMapping("/create")
