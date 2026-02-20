@@ -5,6 +5,7 @@ import com.wesleysilva.bappoint.OperatingHours.OperatingHoursModel;
 import com.wesleysilva.bappoint.Services.ServiceModel;
 import com.wesleysilva.bappoint.enums.AppointmentInterval;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,18 +24,24 @@ public class SettingsModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotNull
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "appointment_interval")
-    private AppointmentInterval appointment_interval;
+    private AppointmentInterval appointmentInterval;
 
-    private Integer max_cancellation_interval;
+    @NotNull
+    @Column(name = "max_cancellation_interval")
+    private Integer maxCancellationInterval;
 
+    @NotNull
     @OneToMany(mappedBy = "settings", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiceModel> services = new ArrayList<>();
 
+    @NotNull
     @OneToMany(mappedBy = "settings", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OperatingHoursModel> operatingHours = new ArrayList<>();
 
+    @NotNull
     @OneToMany(mappedBy = "settings", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OffDaysModel> offDays = new ArrayList<>();
 }
