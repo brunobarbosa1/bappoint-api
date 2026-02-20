@@ -111,7 +111,7 @@ public class SlotsTimesService {
             }
 
             int totalDuration = appointment.getServices().stream()
-                    .mapToInt(ServiceModel::getDuration_minutes)
+                    .mapToInt(ServiceModel::getDurationMinutes)
                     .sum();
 
             LocalDateTime appointmentStart = appointment.getStartTime();
