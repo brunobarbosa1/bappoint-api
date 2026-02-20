@@ -2,6 +2,10 @@ package com.wesleysilva.bappoint.Settings;
 
 import com.wesleysilva.bappoint.Company.CompanyModel;
 import com.wesleysilva.bappoint.Company.CompanyRepository;
+import com.wesleysilva.bappoint.Settings.dto.SettingsAllDetailsDTO;
+import com.wesleysilva.bappoint.Settings.dto.UpdateSettingsDTO;
+import com.wesleysilva.bappoint.exceptions.CompanyNotFoundException;
+import com.wesleysilva.bappoint.exceptions.SettingsNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -15,42 +19,39 @@ public class SettingsService {
     private final CompanyRepository companyRepository;
     private final SettingsMapper settingsMapper;
 
-    public SettingsService(
-            CompanyRepository companyRepository,
-            SettingsMapper settingsMapper
-    ) {
+    public SettingsService(CompanyRepository companyRepository, SettingsMapper settingsMapper) {
         this.companyRepository = companyRepository;
         this.settingsMapper = settingsMapper;
     }
 
-    public SettingsDTO getByCompanyId(UUID companyId) {
+    public SettingsAllDetailsDTO getByCompanyId(UUID companyId) {
         CompanyModel company = companyRepository
                 .findById(companyId)
-                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+                .orElseThrow(CompanyNotFoundException::new);
 
         SettingsModel settings = company.getSettings();
 
         if (settings == null) {
-            throw new EntityNotFoundException("Settings not found for company");
+            throw new SettingsNotFoundException();
         }
 
-        return settingsMapper.map(settings);
+        return settingsMapper.toResponseAllDetails(settings);
     }
 
-    public SettingsDTO updateByCompanyId(UUID companyId, SettingsDTO dto) {
+    public UpdateSettingsDTO updateByCompanyId(UUID companyId, UpdateSettingsDTO updateSettingsDTO) {
         CompanyModel company = companyRepository
                 .findById(companyId)
-                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+                .orElseThrow(CompanyNotFoundException::new);
 
         SettingsModel settings = company.getSettings();
 
         if (settings == null) {
-            throw new EntityNotFoundException("Settings not found for company");
+            throw new SettingsNotFoundException();
         }
 
-        settings.setAppointment_interval(dto.getAppointment_interval());
-        settings.setMax_cancellation_interval(dto.getMax_cancellation_interval());
+        settings.setAppointmentInterval(updateSettingsDTO.getAppointmentInterval());
+        settings.setMaxCancellationInterval(updateSettingsDTO.getMaxCancellationInterval());
 
-        return settingsMapper.map(settings);
+        return settingsMapper.toUpdateSettings(settings);
     }
 }
